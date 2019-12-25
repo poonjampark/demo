@@ -1,11 +1,11 @@
 /**
  * 
  */
-package com.pzp.dao;
+package com.pzp.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Select;
+import org.mybatis.spring.annotation.MapperScan;
 
 import com.pzp.model.User;
 
@@ -15,12 +15,18 @@ import com.pzp.model.User;
  * @author panzhanpeng
  * @date 2018年3月14日下午11:39:17
  */
-public interface UserDao {
+@MapperScan
+public interface UserMapper {
 
 	/**
 	 * 获取所有用户
 	 * @return
 	 */
-	@Select("select * from user")
 	List<User> listUsers();
+	
+	/**
+	 * 新增用户
+	 */
+	void insert(User user);
+	
 }

@@ -3,23 +3,31 @@
  */
 package com.pzp.model;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+
 /**
  *<p>Title: User</p>
  * <p>Description: </p>
  * @author panzhanpeng
  * @date 2018年3月12日下午9:02:30
  */
+@EntityScan
 public class User {
 
 	/**
 	 * 主键
 	 */
-	private Integer id;
+	private String id;
 	
 	/**
 	 * 用户名
 	 */
 	private String name;
+	
+	/**
+	 * 账号
+	 */
+	private String account;
 	
 	/**
 	 * 密码
@@ -36,11 +44,11 @@ public class User {
 	 */
 	private Integer credits;
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -74,5 +82,13 @@ public class User {
 
 	public void setCredits(Integer credits) {
 		this.credits = credits;
+	}
+
+	public String getAccount() {
+		return account;
+	}
+
+	public void setAccount(String account) {
+		this.account = account;
 	}
 }
