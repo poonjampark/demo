@@ -3,16 +3,23 @@
  */
 package com.pzp.model;
 
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import java.io.Serializable;
+
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
+
 
 /**
- *<p>Title: User</p>
- * <p>Description: </p>
+ *用户类
  * @author panzhanpeng
  * @date 2018年3月12日下午9:02:30
  */
 @EntityScan
-public class User {
+public class User implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4130538254948193999L;
 
 	/**
 	 * 主键
@@ -35,15 +42,15 @@ public class User {
 	private String password;
 	
 	/**
-	 * 登录ip地址
+	 * 最后修改人
 	 */
-	private String ip;
+	private String lastUpdateName;
 	
 	/**
-	 * 积分
+	 * 最后修改时间
 	 */
-	private Integer credits;
-
+	private String lastUpdateTime;
+	
 	public String getId() {
 		return id;
 	}
@@ -68,27 +75,27 @@ public class User {
 		this.password = password;
 	}
 
-	public String getIp() {
-		return ip;
-	}
-
-	public void setIp(String ip) {
-		this.ip = ip;
-	}
-
-	public Integer getCredits() {
-		return credits;
-	}
-
-	public void setCredits(Integer credits) {
-		this.credits = credits;
-	}
-
 	public String getAccount() {
 		return account;
 	}
 
 	public void setAccount(String account) {
 		this.account = account;
+	}
+
+	public String getLastUpdateName() {
+		return lastUpdateName;
+	}
+
+	public void setLastUpdateName(String lastUpdateName) {
+		this.lastUpdateName = lastUpdateName;
+	}
+
+	public String getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(String lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
 	}
 }

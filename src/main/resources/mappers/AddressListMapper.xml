@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzp.mapper.AddressListMapper">
+	<resultMap id="resultBean" type="com.pzp.model.AddressList">
+		<result property="id" column="id" javaType="java.lang.String"></result>
+		<result property="companyName" column="companyName" javaType="java.lang.String"></result>
+		<result property="typeName" column="typeName" javaType="java.lang.String"></result>
+		<result property="post" column="post" javaType="java.lang.String"></result>
+		<result property="userName" column="userName" javaType="java.lang.String"></result>
+		<result property="telephone" column="telephone" javaType="java.lang.String"></result>
+		<result property="mobile" column="mobile" javaType="java.lang.String"></result>
+		<result property="email" column="email" javaType="java.lang.String"></result>
+		<result property="belongTo" column="belongTo" javaType="java.lang.String"></result>
+	</resultMap>
+	
+	<sql id="base_column">
+		id, companyName, typeName, post, userName, telephone, mobile, email, belongTo
+	</sql>
+	
+	<insert id="addAddressList" parameterType="com.pzp.model.AddressList">
+		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
+			select replace(uuid(), "-", "") from dual
+		</selectKey>
+		insert into t_addresslist
+		(<include refid="base_column"></include>)
+		values(#{id}, #{companyName}, #{typeName}, #{post}, #{userName},
+		 #{telephone}, #{mobile}, #{email}, #{belongTo})
+	</insert>
+	
+	<select id="findAddressLists" resultType="com.pzp.model.AddressList">
+		select
+		<include refid="base_column"></include>
+		from t_addresslist
+	</select>
+</mapper>

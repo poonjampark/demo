@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pzp.mapper.BookMapper">
+	<resultMap id="resultBean" type="com.pzp.model.Book">
+		<result property="id" column="id" javaType="long"></result>
+		<result property="name" column="name" javaType="java.lang.String"></result>
+	</resultMap>
+	
+	<sql id="base_column">
+		id, name, numbers
+	</sql>
+	
+	<sql id="insert_base_column">
+		(name, numbers)
+	</sql>
+	
+	<insert id="addBook" useGeneratedKeys="true" keyProperty="id" parameterType="com.pzp.model.Book">
+		insert into book
+		<include refid="insert_base_column"></include>
+		values(#{name}, #{numbers})
+	</insert>
+	
+	<select id="findBooksByPage" resultType="com.pzp.model.Book">
+		select
+		<include refid="base_column"></include>
+		from book
+	</select>
+	
+	<select id="findBookStock" parameterType="long">
+		select numbers from book where id = #{id}
+	</select>
+	
+	<update id="buyBook" parameterType="com.pzp.model.Book">
+		update book set numbers = #{numbers}
+		where id = #{id}
+	</update>
+	
+</mapper>

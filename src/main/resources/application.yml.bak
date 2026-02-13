@@ -1,0 +1,70 @@
+server: 
+  port: 8082
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  type-aliases-package: com.pzp.model
+
+spring:
+  shardingsphere:
+    mode:
+      type: STANDALONE
+    # 数据源配置
+    datasource:
+      # 数据源名称，多数据源以逗号分隔
+      names: sharding0,sharding1
+      sharding0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/sharding0?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+        username: root
+        password: 123456
+      sharding1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/sharding1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+        username: root
+        password: 123456
+    # 分片规则配置
+    rules:
+      sharding:
+        tables:
+          book:  # 表名，根据实际情况修改
+            actual-data-nodes: sharding$->{0..1}.book$->{0..1}  # 分库分表规则，例如：ds0.t_order0, ds0.t_order1, ds1.t_order0, ds1.t_order1
+            table-strategy:
+              standard:
+                sharding-column: orderId  # 分片列名称，例如订单ID
+                sharding-algorithm-name: book_inline  # 分片算法名称，需要定义在algorithm中
+            key-generator:
+              type: SNOWFLAKE  # 分布式主键生成器类型，例如雪花算法
+              column: userId  # 主键列名称，例如id字段
+        sharding-algorithms:
+          book_inline:  # 分片算法名称，需要与table-strategy中的sharding-algorithm-name对应
+            type: INLINE  # 算法类型，这里使用INLINE算法，即基于模运算的分片策略
+            props:
+              algorithm-expression: book$->{userId % 2}  # 分片表达式，例如根据order_id的奇偶性分到不同的表或库上
+    # 属性配置
+    props:
+      # 展示修改以后的sql语句
+      sql-show: true
+  #redisson: 
+    #cluster: 127.0.0.1:6379,127.0.0.1:6380,127.0.0.1:7379,127.0.0.1:7380,127.0.0.1:8379,127.0.0.1:8380
+  #data:
+   # redis:
+    #  cluster:
+     #   refresh-period: 3000
+      #  nodes: 127.0.0.1:6379,127.0.0.1:6380,127.0.0.1:7379,127.0.0.1:7380,127.0.0.1:8379,127.0.0.1:8380
+       # max-redirects: 6
+#elasticsearch: 
+  #uris: http://localhost:9200
+  #username: elastic
+  #password: l9M9oPHlKsBek8H_Jfy7
+#rocketmq: 
+  #name-server: localhost:9876
+  #producer: 
+    #group: my-producer-group
+  #kafka: 
+    #bootstrap-servers: localhost:9092
+    #consumer: 
+      #auto-offset-reset: earliest
+
+

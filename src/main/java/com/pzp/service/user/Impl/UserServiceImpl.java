@@ -9,7 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.pagehelper.PageHelper;
 import com.pzp.mapper.UserMapper;
@@ -42,12 +45,12 @@ public class UserServiceImpl implements UserService {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public MutilResponse<User> listUsers(int pageNmuber, int pageSize) {
-		PageHelper.startPage(pageNmuber, pageSize);
+	public MutilResponse<User> listUsers(int pageNumber, int pageSize) {
+		PageHelper.startPage(pageNumber, pageSize);
 		MutilResponse<User> response = new MutilResponse<User>();
 		List<User> users = null;
 		try {
-			users = userMapper.listUsers();
+			users = userMapper.findUsersByPage(pageNumber, pageSize);
 			response = MutilResponse.buildSuccess(null, null, users);
 		} catch (Exception e) {
 			LOGGER.error(UserEnum.USER_TEH_LIST_EXCEPTION.getErrorMsg(), e.getMessage());
@@ -58,17 +61,18 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
+	@ResponseBody
+	@Transactional(isolation = Isolation.READ_COMMITTED)
 	public Response addUser(User user) {
-		Response response = new Response();
+		Response response = checkParam(user);
 		try {
-			response = checkParam(user);
-			if (!StringUtils.isEmpty(response)) {
+			if (response != null) {
 				return response;
 			}
-			user.setCredits(5);
-			userMapper.insert(user);
+			userMapper.addUser(user);
 			return Response.buildSuccess();
 		} catch (Exception e) {
+			LOGGER.debug(e.getMessage());
 			return Response.buildFail(UserEnum.USER_TEH_ADD_USER_EXCEPTION.getErrorCode(),
 					UserEnum.USER_TEH_ADD_USER_EXCEPTION.getErrorMsg());
 		}
@@ -80,23 +84,52 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 	private Response checkParam(User user) {
-		if (StringUtils.isEmpty(user)) {
+		if (user == null) {
 			return Response.buildFail(UserEnum.USER_BIZ_PARAM_NULL.getErrorCode(),
 					UserEnum.USER_BIZ_PARAM_NULL.getErrorMsg());
 		}
-		if (StringUtils.isEmpty(user.getName())) {
+		if ("".equals(user.getName()) && user.getName() != null) {
 			return Response.buildFail(UserEnum.USER_BIZ_NAME_NULL.getErrorCode(),
 					UserEnum.USER_BIZ_NAME_NULL.getErrorMsg());
 		}
-		if (StringUtils.isEmpty(user.getAccount())) {
+		if ("".equals(user.getAccount()) && user.getAccount() != null) {
 			return Response.buildFail(UserEnum.USER_BIZ_ACCOUNT_NULL.getErrorCode(),
 					UserEnum.USER_BIZ_ACCOUNT_NULL.getErrorMsg());
 		}
-		if (StringUtils.isEmpty(user.getPassword())) {
+		if ("".equals(user.getPassword()) && user.getPassword() != null) {
 			return Response.buildFail(UserEnum.USER_BIZ_PASSWORD_NULL.getErrorCode(),
 					UserEnum.USER_BIZ_PASSWORD_NULL.getErrorMsg());
 		}
 		return null;
+	}
+
+	@Override
+	public MutilResponse<User> findUsersByNameAndAccount(String name, String account, int pageNum, int pageSize) {
+		PageHelper.startPage(pageNum, pageSize);
+		MutilResponse<User> response = new MutilResponse<User>();
+		List<User> users = null;
+		try {
+			users = userMapper.findUsersByNameAndAccount(name, account, pageNum, pageSize);
+			response = MutilResponse.buildSuccess(null, null, users);
+		} catch (Exception e) {
+			LOGGER.error(UserEnum.USER_TEH_LIST_EXCEPTION.getErrorMsg(), e.getMessage());
+			response = (MutilResponse<User>) MutilResponse.buildFail(UserEnum.USER_TEH_LIST_EXCEPTION.getErrorCode(),
+					UserEnum.USER_TEH_LIST_EXCEPTION.getErrorMsg());
+		}
+		return response;
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.NESTED)
+	public Response batchAddUser(List<User> users) {
+		try {
+			userMapper.addUsers(users);
+			return Response.buildSuccess();
+		} catch (Exception e) {
+			LOGGER.debug(e.getMessage());
+			return Response.buildFail(UserEnum.USER_TEH_ADD_USER_EXCEPTION.getErrorCode(),
+					UserEnum.USER_TEH_ADD_USER_EXCEPTION.getErrorMsg());
+		}
 	}
 
 }

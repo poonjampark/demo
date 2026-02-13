@@ -8,26 +8,57 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="name" column="name" javaType="java.lang.String"></result>
 		<result property="account" column="account" javaType="java.lang.String"></result>
 		<result property="password" column="password" javaType="java.lang.String"></result>
-		<result property="ip" column="login_ip" javaType="java.lang.String"></result>
-		<result property="credits" column="credits" javaType="java.lang.Integer"></result>
+		<result property="lastUpdateName" column="lastUpdateName" javaType="java.lang.String"></result>
+		<result property="luastUpdateTime" column="lastUpdateTime" javaType="java.lang.String"></result>
 	</resultMap>
 	
 	<sql id="base_column">
-		id, name, account, password, login_ip as ip, credits
+		id, name, account, password, lastUpdateName, lastUpdateTime
 	</sql>
 	
-	<insert id="insert" parameterType="com.pzp.model.User">
-		<selectKey keyProperty="id" resultType="java.lang.String" order="BEFORE">
-			select replace(uuid(), "-", "") from dual
-		</selectKey>		
-		insert into pzp_user
-		(<include refid="base_column"></include>)
-		values(#{id}, #{name}, #{account}, #{password}, #{ip}, #{credits})
+	<sql id="insert_base_column">
+		(name, account, password, lastUpdateName, lastUpdateTime)
+	</sql>
+	
+	<insert id="addUser" useGeneratedKeys="true" keyProperty="id" parameterType="com.pzp.model.User">
+		insert into t_user
+		<include refid="insert_base_column"></include>
+		values(#{name}, #{account}, #{password}, #{lastUpdateName}, #{lastUpdateTime})
 	</insert>
 	
-	<select id="listUsers" resultType="com.pzp.model.User">
-		select 
+	<insert id="addUsers" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+		insert into t_user
+		<include refid="insert_base_column"></include>
+		values
+		<foreach collection="list" item="item" separator=",">
+			(
+			 #{item.name},
+			 #{item.account},
+			 #{item.password},
+			 #{item.lastUpdateName},
+			 #{item.lastUpdateTime}
+			 )
+		</foreach>
+	</insert>
+	
+	<select id="findUsersByPage" resultType="com.pzp.model.User">
+		select
 		<include refid="base_column"></include>
-		from pzp_user
+		from t_user
 	</select>
+	
+	<select id="findUsersByNameAndAccount">
+		select
+		<include refid="base_column"></include>
+		from t_user
+		<trim prefix="where" prefixOverrides="and">
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="account != null">
+				and account = #{account}
+			</if>
+		</trim>
+	</select>
+	
 </mapper>
