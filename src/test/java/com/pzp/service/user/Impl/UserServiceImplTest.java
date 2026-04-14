@@ -1,9 +1,7 @@
 package com.pzp.service.user.Impl;
 
-import static org.junit.Assert.*;
-import static org.junit.Assume.assumeNoException;
-
-import java.util.List;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
