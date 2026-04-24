@@ -3,20 +3,14 @@
  */
 package com.pzp.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.pzp.annotation.IsLogin;
 import com.pzp.model.Book;
 import com.pzp.model.SharedingBook;
 import com.pzp.service.book.BookService;
 import com.pzp.service.sharedingbook.SharedingBookService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  *<p>Title: 书本控制器类</p>
@@ -36,7 +30,7 @@ public class BookController {
 	
 	/**
 	 * 根据页码获取数据
-	 * @param pageNmuber
+	 * @param pageNumber
 	 * @param pageSize
 	 * @return
 	 */
@@ -58,7 +52,6 @@ public class BookController {
 	
 	/**
 	 * 购买书本
-	 * @param user
 	 * @return
 	 */
 	@PostMapping("/buy/book/{userId}")
@@ -69,7 +62,6 @@ public class BookController {
 	
 	/**
 	 * 新增书,分表分库
-	 * @param book
 	 * @return
 	 */
 	@PostMapping("/sharedingbook")

@@ -5,8 +5,10 @@ package com.pzp.service.user.Impl;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.pzp.util.response.MutilResponse;
+import com.pzp.util.response.Response;
+import org.apache.rocketmq.logging.org.slf4j.Logger;
+import org.apache.rocketmq.logging.org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -20,8 +22,6 @@ import com.pzp.model.User;
 import com.pzp.service.user.UserService;
 import com.pzp.util.UserEnum;
 
-import util.panzhanpeng.response.MutilResponse;
-import util.panzhanpeng.response.Response;
 
 /**
  *<p>Title: UserImpl</p>
@@ -39,7 +39,8 @@ public class UserServiceImpl implements UserService {
 	
 	/**
 	 * 获取所有用户
-	 * @param pageNmuber
+	 *
+	 * @param pageNumber
 	 * @param pageSize
 	 * @return
 	 */

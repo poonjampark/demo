@@ -1,8 +1,8 @@
 package com.pzp.service.sharedingbook;
 
 import com.pzp.model.SharedingBook;
+import com.pzp.util.response.Response;
 
-import util.panzhanpeng.response.Response;
 
 /**
  * 书本接口类

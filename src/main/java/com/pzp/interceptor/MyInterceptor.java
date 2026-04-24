@@ -1,19 +1,14 @@
 package com.pzp.interceptor;
 
+import com.alibaba.fastjson.JSON;
+import com.pzp.util.response.MutilResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.AfterReturning;
-import org.aspectj.lang.annotation.AfterThrowing;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.pzp.model.User;
 
-import util.panzhanpeng.response.MutilResponse;
 
 @Aspect
 @Component
@@ -39,12 +34,12 @@ public class MyInterceptor {
 	public MutilResponse<User> around(ProceedingJoinPoint pjp) {
 		System.out.println("before around....");
 		Object[] args = pjp.getArgs();
-		System.out.println("调用方法" + pjp.getSignature() + ",入参：" + JSONObject.toJSONString(args));
+		System.out.println("调用方法" + pjp.getSignature() + ",入参：" + JSON.toJSONString(args));
 		System.out.println("after around....");
 		MutilResponse<User> users = null;
 		try {
 			users = (MutilResponse<User>) pjp.proceed(args);
-			System.out.println("请求返回结果为：" + JSONObject.toJSONString(users));
+			System.out.println("请求返回结果为：" + JSON.toJSONString(users));
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
 		}

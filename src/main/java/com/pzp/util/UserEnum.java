@@ -1,6 +1,7 @@
 package com.pzp.util;
 
-import util.panzhanpeng.response.EnumBaseI;
+
+import com.pzp.util.response.EnumBaseI;
 
 public enum UserEnum implements EnumBaseI {
 	

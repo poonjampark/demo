@@ -3,9 +3,9 @@ package com.pzp.service.user;
 import java.util.List;
 
 import com.pzp.model.User;
+import com.pzp.util.response.MutilResponse;
+import com.pzp.util.response.Response;
 
-import util.panzhanpeng.response.MutilResponse;
-import util.panzhanpeng.response.Response;
 
 /**
  * 用户业务接口类

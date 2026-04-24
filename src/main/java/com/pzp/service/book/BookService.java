@@ -1,9 +1,9 @@
 package com.pzp.service.book;
 
 import com.pzp.model.Book;
+import com.pzp.util.response.MutilResponse;
+import com.pzp.util.response.Response;
 
-import util.panzhanpeng.response.MutilResponse;
-import util.panzhanpeng.response.Response;
 
 /**
  * 书本接口类

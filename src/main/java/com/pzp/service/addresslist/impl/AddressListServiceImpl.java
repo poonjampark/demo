@@ -1,18 +1,16 @@
 package com.pzp.service.addresslist.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.github.pagehelper.PageHelper;
 import com.pzp.mapper.AddressListMapper;
 import com.pzp.model.AddressList;
 import com.pzp.service.addresslist.AddressListService;
+import com.pzp.util.response.MutilResponse;
+import com.pzp.util.response.Response;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import util.panzhanpeng.response.MutilResponse;
-import util.panzhanpeng.response.Response;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AddressListServiceImpl implements AddressListService {

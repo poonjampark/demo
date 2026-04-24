@@ -1,13 +1,10 @@
 package com.pzp.model;
 
-import org.springframework.boot.persistence.autoconfigure.EntityScan;
-
 /**
  * 通讯录类
  * @author panzhanpeng
  *
  */
-@EntityScan
 public class AddressList {
 	
 	/**

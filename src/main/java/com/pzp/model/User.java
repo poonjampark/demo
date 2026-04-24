@@ -5,15 +5,6 @@ package com.pzp.model;
 
 import java.io.Serializable;
 
-import org.springframework.boot.persistence.autoconfigure.EntityScan;
-
-
-/**
- *用户类
- * @author panzhanpeng
- * @date 2018年3月12日下午9:02:30
- */
-@EntityScan
 public class User implements Serializable {
 
 	/**

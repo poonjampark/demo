@@ -1,5 +1,6 @@
 package com.pzp.controller;
 
+import com.pzp.util.response.SingleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.pzp.model.User;
 import com.pzp.service.user.LoginService;
 
-import util.panzhanpeng.response.SingleResponse;
 
 @RestController
 @RequestMapping("/user")

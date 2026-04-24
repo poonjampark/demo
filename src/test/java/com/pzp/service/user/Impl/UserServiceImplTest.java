@@ -1,19 +1,19 @@
 package com.pzp.service.user.Impl;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.pzp.model.User;
+import com.pzp.service.user.UserService;
+import com.pzp.util.response.MutilResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alibaba.fastjson.JSONObject;
-import com.pzp.model.User;
-import com.pzp.service.user.UserService;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import util.panzhanpeng.response.MutilResponse;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,7 +32,7 @@ public class UserServiceImplTest {
 	public void testAddUser() {
 		String paramString = "{\"name\":\"pzp\",\"account\":\"13286591459\",\"password\":\"13189190858\",\"ip\":\"192.168.224.1\",\"credits\":\"5\"}";
 		try {
-			User user = JSONObject.parseObject(paramString, User.class);
+			User user = JSON.parseObject(paramString, User.class);
 			userService.addUser(user);
 		} catch (Exception e) {
 			assertFalse("添加失败", false);

@@ -1,9 +1,7 @@
 package com.pzp.model;
 
-import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.data.annotation.Id;
 
-@EntityScan
 public class Book {
 
 	@Id

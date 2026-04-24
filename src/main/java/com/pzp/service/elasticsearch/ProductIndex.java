@@ -1,5 +1,6 @@
 package com.pzp.service.elasticsearch;
 
+import com.pzp.util.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.IndexOperations;
@@ -7,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.pzp.model.Product;
 
-import util.panzhanpeng.response.Response;
 
 @Service
 public class ProductIndex {
@@ -17,7 +17,6 @@ public class ProductIndex {
 	
 	/**
 	 * 创建索引
-	 * @param indexName
 	 * @return
 	 */
 	public Response createIndex() {

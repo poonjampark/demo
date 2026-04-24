@@ -1,13 +1,10 @@
 package com.pzp.model;
 
-import org.springframework.boot.persistence.autoconfigure.EntityScan;
-
 /**
  * 角色权限类
  * @author panzhanpeng
  *
  */
-@EntityScan
 public class Role {
 
 	/**
