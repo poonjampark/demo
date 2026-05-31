@@ -6,20 +6,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap id="resultBean" type="com.pzp.model.Book">
 		<result property="id" column="id" javaType="long"></result>
 		<result property="name" column="name" javaType="java.lang.String"></result>
+		<result property="numbers" column="numbers" javaType="int"></result>
+		<result property="orderId" column="orderId" javaType="long"></result>
+		<result property="userId" column="userId" javaType="long"></result>
 	</resultMap>
 	
 	<sql id="base_column">
-		id, name, numbers
+		id, name, numbers, orderId, userId
 	</sql>
 	
 	<sql id="insert_base_column">
-		(name, numbers)
+		(id, name, numbers, orderId, userId)
 	</sql>
 	
 	<insert id="addBook" useGeneratedKeys="true" keyProperty="id" parameterType="com.pzp.model.Book">
 		insert into book
 		<include refid="insert_base_column"></include>
-		values(#{name}, #{numbers})
+		values(#{id}, #{name}, #{numbers}, #{orderId}, #{userId})
 	</insert>
 	
 	<select id="findBooksByPage" resultType="com.pzp.model.Book">
@@ -37,4 +40,39 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where id = #{id}
 	</update>
 	
+	<!-- 分库分表相关方法 -->
+	<select id="selectById" resultMap="resultBean">
+		SELECT
+		<include refid="base_column"/>
+		FROM book
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectByOrderId" resultMap="resultBean">
+		SELECT
+		<include refid="base_column"/>
+		FROM book
+		WHERE orderId = #{orderId}
+	</select>
+
+	<insert id="insert" parameterType="com.pzp.model.Book">
+		INSERT INTO book
+		<include refid="insert_base_column"/>
+		VALUES (#{id}, #{name}, #{numbers}, #{orderId}, #{userId})
+	</insert>
+
+	<update id="update" parameterType="com.pzp.model.Book">
+		UPDATE book
+		SET name = #{name},
+			numbers = #{numbers},
+			orderId = #{orderId},
+			userId = #{userId}
+		WHERE id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		DELETE FROM book
+		WHERE id = #{id}
+	</delete>
+
 </mapper>

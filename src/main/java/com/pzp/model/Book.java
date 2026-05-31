@@ -1,21 +1,22 @@
 package com.pzp.model;
 
-import org.springframework.data.annotation.Id;
-
 public class Book {
 
-	@Id
-	private long id;
+	private Long id;
 	
 	private String name;
 	
-	private int numbers;
+	private Integer numbers;
+	
+	private Long orderId;
 
-	public long getId() {
+	private Long userId;
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -27,12 +28,27 @@ public class Book {
 		this.name = name;
 	}
 
-	public int getNumbers() {
+	public Integer getNumbers() {
 		return numbers;
 	}
 
-	public void setNumbers(int numbers) {
+	public void setNumbers(Integer numbers) {
 		this.numbers = numbers;
 	}
 	
+	public Long getOrderId() {
+		return orderId;
+	}
+	
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
+	}
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

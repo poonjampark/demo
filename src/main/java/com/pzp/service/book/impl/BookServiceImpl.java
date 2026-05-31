@@ -3,10 +3,13 @@
  */
 package com.pzp.service.book.impl;
 
-import java.util.List;
-
-//import org.redisson.api.RLock;
-//import org.redisson.api.RedissonClient;
+import com.github.pagehelper.PageHelper;
+import com.pzp.enums.BookEnum;
+import com.pzp.enums.UserEnum;
+import com.pzp.mapper.BookMapper;
+import com.pzp.model.Book;
+import com.pzp.service.book.BookService;
+import com.pzp.util.SnowflakeIdGenerator;
 import com.pzp.util.response.MutilResponse;
 import com.pzp.util.response.Response;
 import org.apache.rocketmq.logging.org.slf4j.Logger;
@@ -17,12 +20,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.pagehelper.PageHelper;
-import com.pzp.mapper.BookMapper;
-import com.pzp.model.Book;
-import com.pzp.service.book.BookService;
-import com.pzp.util.BookEnum;
-import com.pzp.util.UserEnum;
+import java.util.List;
 
 /**
  *<p>Title: BookServiceImpl</p>
@@ -37,6 +35,9 @@ public class BookServiceImpl implements BookService {
 
 	@Autowired
 	private BookMapper bookMapper;
+	
+	@Autowired
+	private SnowflakeIdGenerator snowflakeIdGenerator;
 
 //	@Autowired
 //	private RedissonClient redissonClient;
@@ -125,6 +126,68 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public int findBookStock(long id) {
 		return bookMapper.findBookStock(id);
+	}
+	
+	@Override
+	public Book getById(Long id) {
+		return bookMapper.selectById(id);
+	}
+	
+	@Override
+	public Book getByOrderId(Long orderId) {
+		return bookMapper.selectByOrderId(orderId);
+	}
+	
+	@Override
+	@Transactional(rollbackFor = {Exception.class})
+	public Response addBookSharding(Book book) {
+		try {
+			// 分库分表环境下必须使用分布式唯一ID，忽略前端传入的ID
+			Long generatedId = snowflakeIdGenerator.generateId();
+			book.setId(generatedId);
+			LOGGER.info("生成分布式雪花ID: {}, 书名: {}, orderId: {}", generatedId, book.getName(), book.getOrderId());
+			
+			bookMapper.insert(book);
+			return Response.buildSuccess();
+		} catch (Exception e) {
+			LOGGER.error("分库分表新增失败, book: {}", book, e);
+			return Response.buildFail(UserEnum.USER_TEH_ADD_USER_EXCEPTION.getErrorCode(),
+					"分库分表新增失败：" + e.getMessage());
+		}
+	}
+	
+	@Override
+	@Transactional(rollbackFor = {Exception.class})
+	public Response updateBookSharding(Book book) {
+		try {
+			int rows = bookMapper.update(book);
+			if (rows > 0) {
+				return Response.buildSuccess();
+			} else {
+				return Response.buildFail("404", "记录不存在");
+			}
+		} catch (Exception e) {
+			LOGGER.error("分库分表更新失败", e);
+			return Response.buildFail(BookEnum.BOOK_TEH_UPDATE_EXCEPTION != null ?
+							BookEnum.BOOK_TEH_UPDATE_EXCEPTION.getErrorCode() : "500",
+					"分库分表更新失败：" + e.getMessage());
+		}
+	}
+	
+	@Override
+	@Transactional(rollbackFor = {Exception.class})
+	public Response deleteBookSharding(Long id) {
+		try {
+			int rows = bookMapper.delete(id);
+			if (rows > 0) {
+				return Response.buildSuccess();
+			} else {
+				return Response.buildFail("404", "记录不存在");
+			}
+		} catch (Exception e) {
+			LOGGER.error("分库分表删除失败", e);
+			return Response.buildFail("500", "分库分表删除失败：" + e.getMessage());
+		}
 	}
 	
 }

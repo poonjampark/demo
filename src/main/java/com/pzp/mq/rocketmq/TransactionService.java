@@ -4,7 +4,7 @@
 //import org.apache.rocketmq.spring.core.RocketMQLocalTransactionListener;
 //import org.apache.rocketmq.spring.core.RocketMQLocalTransactionState;
 //
-//import com.pzp.util.UserEnum;
+//import com.pzp.enums.UserEnum;
 //
 //import util.panzhanpeng.exception.BussinessException;
 //

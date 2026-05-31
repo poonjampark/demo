@@ -1,4 +1,4 @@
-package com.pzp.util;
+package com.pzp.enums;
 
 
 import com.pzp.util.response.EnumBaseI;

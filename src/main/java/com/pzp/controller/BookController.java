@@ -6,11 +6,13 @@ package com.pzp.controller;
 import com.alibaba.fastjson.JSON;
 import com.pzp.annotation.IsLogin;
 import com.pzp.model.Book;
-import com.pzp.model.SharedingBook;
 import com.pzp.service.book.BookService;
-import com.pzp.service.sharedingbook.SharedingBookService;
+import com.pzp.util.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *<p>Title: 书本控制器类</p>
@@ -24,9 +26,6 @@ public class BookController {
 
 	@Autowired
 	private BookService bookService;
-	
-	@Autowired
-	private SharedingBookService sharedingBookService;
 	
 	/**
 	 * 根据页码获取数据
@@ -61,12 +60,89 @@ public class BookController {
 	}
 	
 	/**
-	 * 新增书,分表分库
+	 * 新增书籍（分库分表）- 使用Book实体
+	 * @param book 书籍信息
 	 * @return
 	 */
-	@PostMapping("/sharedingbook")
-	public String sharedingInsert(@RequestBody SharedingBook sharedingBook) {
-		return JSON.toJSONString(sharedingBookService.addBook(sharedingBook));
+	@PostMapping("/sharding/add")
+	public Response addBookSharding(@RequestBody Book book) {
+		return bookService.addBookSharding(book);
+	}
+	
+	/**
+	 * 查询书籍（分库分表）- 使用Book实体
+	 * @param id 书籍ID
+	 * @return
+	 */
+	@GetMapping("/sharding/{id}")
+	public String getBookSharding(@PathVariable Long id) {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			Book book = bookService.getById(id);
+			result.put("success", true);
+			result.put("data", book);
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+	
+	/**
+	 * 根据orderId查询书籍（分库分表）- 使用Book实体
+	 * @param orderId 订单ID（分片键）
+	 * @return
+	 */
+	@GetMapping("/sharding/order/{orderId}")
+	public String getBookByOrderId(@PathVariable Long orderId) {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			Book book = bookService.getByOrderId(orderId);
+			result.put("success", true);
+			result.put("data", book);
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+	
+	/**
+	 * 更新书籍（分库分表）- 使用Book实体
+	 * @param book 书籍信息
+	 * @return
+	 */
+	@PutMapping("/sharding/update")
+	public String updateBookSharding(@RequestBody Book book) {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			Response response = bookService.updateBookSharding(book);
+			result.put("success", true);
+			result.put("message", "更新成功");
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", "更新失败：" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
+	}
+	
+	/**
+	 * 删除书籍（分库分表）- 使用Book实体
+	 * @param id 书籍ID
+	 * @return
+	 */
+	@DeleteMapping("/sharding/{id}")
+	public String deleteBookSharding(@PathVariable Long id) {
+		Map<String, Object> result = new HashMap<>();
+		try {
+			Response response = bookService.deleteBookSharding(id);
+			result.put("success", true);
+			result.put("message", "删除成功");
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", "删除失败：" + e.getMessage());
+		}
+		return JSON.toJSONString(result);
 	}
 	
 }

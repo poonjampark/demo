@@ -20,7 +20,7 @@ import com.github.pagehelper.PageHelper;
 import com.pzp.mapper.UserMapper;
 import com.pzp.model.User;
 import com.pzp.service.user.UserService;
-import com.pzp.util.UserEnum;
+import com.pzp.enums.UserEnum;
 
 
 /**
